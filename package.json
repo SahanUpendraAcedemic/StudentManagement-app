@@ -2,10 +2,9 @@
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "server": "nodemon server.js",
-    "dev": "concurrently \"cd frontend && npm run dev\""
+    "dev": "concurrently \"cd frontend && npm run dev\" \"cd backend && npm run start:dev\""
   },
   "dependencies": {
-    "concurrently": "^9.1.2",
-    "node": "^22.13.0"
+    "concurrently": "^9.1.2"
   }
 }
