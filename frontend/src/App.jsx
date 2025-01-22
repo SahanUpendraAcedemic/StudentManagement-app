@@ -8,8 +8,8 @@ function App() {
   return (
     <>
       <Header /> 
-      <main className='min-h-screen max-w-7xl mx-auto py-10'>
-        <Outlet />
+      <main className='min-h-screen tems-center justify-center overflow-x-hidden'>
+        <Outlet />  
       </main>
       <Footer />
     </>
