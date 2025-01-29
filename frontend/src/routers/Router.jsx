@@ -3,6 +3,9 @@ import Mainpage from "../pages/Mainpage";
 import SignIn from "../pages/SignIn";
 import SignUp from "../pages/SignUp";
 import App from "../App";
+import Account from "../pages/Account";
+import AddStudent from "../pages/AddStudent";
+import StudentDetails from "../pages/StudentDetails";
 
 const router = createBrowserRouter([
     {
@@ -20,6 +23,18 @@ const router = createBrowserRouter([
             {
                 path:"/signup",
                 element:<SignUp />
+            },
+            {
+                path:"/account",
+                element:<Account/>
+            },
+            {
+                path:"/addStudent",
+                element:<AddStudent/>
+            },
+            {
+                path:"/studentDetails/:id",
+                element:<StudentDetails/>
             }
         ]
 

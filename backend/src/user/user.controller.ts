@@ -1,5 +1,6 @@
-import { Body, Controller, Post,Req} from '@nestjs/common';
+import { Body, Controller, Get, Post,Req} from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { UserService } from './services/user.service';
 
 /**
  * The UserController is a class that handles the incoming HTTP requests for the User entity.
@@ -12,15 +13,23 @@ import { CreateUserDto } from './dtos/create-user.dto';
 
 @Controller('user')
 export class UserController {
-    @Post('/signup')
-    create(
-        /*@Body() reqest: CreateUserDto,
-        CreateUserDto: CreateUserDto,*/
-        @Req() req: Request, 
-        @Body() body: CreateUserDto,
+
+    constructor(readonly userService: UserService,)
+    {}
+
+    @Get('/login')
+    getUser(
+        @Req() req: Request,
+        @Body() body: Body,
     ){
-        console.log(CreateUserDto);
-        return CreateUserDto;
+        
+    }
+
+    @Post('/signup')
+    public createUser( 
+        @Body() createUserDto: CreateUserDto,
+    ){
+        return this.userService.createUser(createUserDto);
         
     }
     

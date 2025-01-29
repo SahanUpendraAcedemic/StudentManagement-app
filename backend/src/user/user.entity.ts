@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn} from "typeorm";
 /*
 *typeorm is a package that allows you to interact with a database using TypeScript.
 * The following code defines a User class as a database table.
@@ -14,6 +14,7 @@ export class User {
     @PrimaryGeneratedColumn()
     id: number;
 
+    @PrimaryColumn()
     @Column()
     name: string;
 
