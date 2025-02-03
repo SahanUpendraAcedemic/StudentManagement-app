@@ -22,15 +22,17 @@ export class StudentService {
         
     }
 
-    public async getAllStudents(){
+    public async getAllStudents({page: page = 1, limit: limit = 10, search: search = ''}){ {
+        const offset = (page-1)*limit;
 
-        const allStudents = await this.createStudentRepo.find();
-        if(allStudents === null){
-            return JSON.stringify("No students found");
-        }else{
-            return allStudents;
-        }
+        const [studentsDetails,total] = await this.createStudentRepo.findAndCount({skip: offset, take: limit});
+        if(studentsDetails === null){
+                return JSON.stringify("No students found");
+         }else{
+                return {page,limit,total,studentsDetails};
+            }
         
+        }
     }
 
     public async createStudent(createStudentDto:CreateStudentDto){

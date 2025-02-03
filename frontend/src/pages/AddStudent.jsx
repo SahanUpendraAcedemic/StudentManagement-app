@@ -70,8 +70,11 @@ export default function () {
         <div className='m-5'>
             <ToastContainer />
             <form className='flex flex-col p-5 space-y-4 w-full items-start justify-center' method='POST' onSubmit={handelSubmit} autoComplete='off'>
-                <div className='w-full'>
+            <div>
                 <h1 className='text-3xl font-bold'>Add Student details</h1>
+                <p>Add newly enrolled  student details.</p>
+            </div>
+            <div className='w-full'>
                 <h4 className='text-sm'>General</h4><hr className='border border-lg border-black w-full'></hr>
                 </div>
                 <CollapsibleDiv content={<>

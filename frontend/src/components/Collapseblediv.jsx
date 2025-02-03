@@ -8,7 +8,7 @@ function CollapsibleDiv({content }) {
   };
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full px-5">
       <button
         onClick={toggleCollapse}
         className="bg-primary rounded-xl text-white"
