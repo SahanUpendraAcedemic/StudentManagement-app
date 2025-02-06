@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { Student } from "../student.entity";
+import { ILike, Repository } from "typeorm";
+import { Student } from "../entities/student.entity";
 import { CreateStudentDto } from "../dtos/create-student.dto";
 
 @Injectable()
@@ -10,9 +10,11 @@ export class StudentService {
         @InjectRepository(Student)
         private createStudentRepo:Repository<Student>,
     ) {}
-    public async getStudentbyId(id){
+
+    public async getStudentbyId(sid : string|number){
+        const studentid = Number(sid); //convert to number if not
         const student = await this.createStudentRepo.findOne({
-            where: {id: id},
+            where: {id: studentid},
         });
         if(student === null){
             return JSON.stringify("Student not found");
@@ -22,10 +24,24 @@ export class StudentService {
         
     }
 
-    public async getAllStudents({page: page = 1, limit: limit = 10, search: search = ''}){ {
-        const offset = (page-1)*limit;
+    public async getAllStudents({page: page = 1, limit: limit = 10, search: search}){ {
+        console.log(page,limit,search);
 
-        const [studentsDetails,total] = await this.createStudentRepo.findAndCount({skip: offset, take: limit});
+        const offset = (page-1)*limit;
+        const searchQuery = search ?    
+             [
+                {student_firstName: ILike(`%${search}%`)},
+                {student_lastName: ILike(`%${search}%`)},
+                {student_address: ILike(`%${search}%`)},
+                {student_credetialName: ILike(`%${search}%`)},
+            ] : [];
+
+        const [studentsDetails,total] = await this.createStudentRepo.findAndCount({
+            where: search ? searchQuery : undefined,
+            skip: offset, take: limit,
+            
+        });
+
         if(studentsDetails === null){
                 return JSON.stringify("No students found");
          }else{
@@ -34,6 +50,7 @@ export class StudentService {
         
         }
     }
+
 
     public async createStudent(createStudentDto:CreateStudentDto){
         const updated_at = new Date();
@@ -72,13 +89,19 @@ export class StudentService {
         
     }
 
-    public async deleteStudent(student_id){
-        const deleteResult = await this.createStudentRepo.delete(student_id);
+    public async deleteStudent(id:number|string,student_id:string|number){
+        const parsedId = typeof id === 'string' ? parseInt(id, 10) : id;
+        const deleteResult = await this.createStudentRepo
+        .createQueryBuilder()
+        .delete()
+        .from('student') // Table name
+        .where("id = :id AND student_id = :student_id", { id: parsedId, student_id })
+        .execute();
+
         if (deleteResult.affected === 0) {
             return JSON.stringify("Student not found");
         } else {
             return JSON.stringify("Student deleted");
         }
-        
     }
 }

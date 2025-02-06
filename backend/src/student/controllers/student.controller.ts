@@ -1,6 +1,6 @@
 import { Controller,Get,Delete,Post,Put, Body, Param, Query} from '@nestjs/common';
-import { CreateStudentDto } from './dtos/create-student.dto';
-import { StudentService } from './services/student.service';
+import { CreateStudentDto } from '../dtos/create-student.dto';
+import { StudentService } from '../services/student.service';
 
 @Controller('student')
 export class StudentController {
@@ -9,10 +9,9 @@ export class StudentController {
 
     @Get('getStudentbyId/:id')
     getStudentbyId(
-        @Param() param: any,
+        @Param('id') param: number,
     ){
-        param = parseInt(param.id);
-        return this.studentService.getStudentbyId(param);
+        return this.studentService.getStudentbyId(Number(param));
 
     }
 
@@ -20,7 +19,7 @@ export class StudentController {
     getAllStudents(
         @Query('page') page: number = 1,
         @Query('limit') limit: number = 10,
-        @Query('search') search: string ,
+        @Query('search') search?: any,
     ){
         return this.studentService.getAllStudents({page, limit, search});
     }
@@ -41,12 +40,13 @@ export class StudentController {
     }
 
 
-    @Delete('deleteStudent/:student_id')
+    @Delete('deleteStudent')
     deleteStudent(
-        @Param() param: any,
+        @Query('id') id: any,
+        @Query('student_id') student_id: any,
     ){
-        console.log(param);
-        return this.studentService.deleteStudent(param);
+        console.log(id,student_id);
+        return this.studentService.deleteStudent(id,student_id);
 
     }
 

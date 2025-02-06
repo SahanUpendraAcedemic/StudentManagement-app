@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import {reqFetchAllStudents,reqDeleteStudent} from '../services/student.services';
 
 export default function Account() {
   const [fetchedStudents, setFetchedStudents] = useState([]);
@@ -8,17 +9,16 @@ export default function Account() {
   const [searchQuery, setSearchQuery] = useState('');
   const recordsPerPage = 10;
 
-  // Fetch students with pagination
+  // Fetch students through useCallback to prevent unnessarty data fetches
   const fetchAllStudents = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:3000/student/getAllStudents?page=${currentPage}&limit=${recordsPerPage}`);
-      const data = await response.json();
+      const data = await reqFetchAllStudents(currentPage, recordsPerPage);
       console.log(data);
       
       if (data) {
         setFetchedStudents(data.studentsDetails);
         setTotalPages(Math.ceil(data.total / recordsPerPage));
-        console.log(fetchedStudents);
+        console.table(fetchedStudents);
       } else {
         setFetchedStudents([]);
         setTotalPages(1);
@@ -31,12 +31,12 @@ export default function Account() {
   }, [currentPage]);
 
   // Delete a student and refresh the list
-  const handleDelete = async (student_id) => {
+  const handleDelete = async (id,student_id) => {
     try {
-      await fetch(`http://localhost:3000/student/deleteStudent/${student_id}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-      });
+      console.log(id,student_id);
+      const response = await reqDeleteStudent(id,student_id);
+      console.log(response);
+      
       fetchAllStudents(); // Refresh student list
     } catch (error) {
       console.error('Error deleting student:', error);
@@ -45,22 +45,10 @@ export default function Account() {
 
   // Search for a student by name
   const handleSearch = async () => {
-    if (!searchQuery.trim()) {
-      fetchAllStudents();
-      return;
-    }
 
-    try {
-      const response = await fetch(`http://localhost:3000/student/getAllStudents?page=${currentPage}&limit=${recordsPerPage}&search=${searchQuery}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ student_firstName: searchQuery }),
-      });
-      const data = await response.json();
-      setFetchedStudents(data.students || []);
-    } catch (error) {
-      console.error('Error searching student:', error);
-    }
+    const data = await reqFetchAllStudents(currentPage, recordsPerPage, searchQuery);
+    setFetchedStudents(data.studentsDetails);
+    setTotalPages(Math.ceil(data.total / recordsPerPage));    
   };
 
   useEffect(() => {
@@ -82,13 +70,21 @@ export default function Account() {
               <p>All the student details shown here</p>
             </div>
             <div className='flex space-x-4 m-2'>
-              <input
-                className='border border-black p-2 rounded-lg'
-                type='text'
-                placeholder='Search'
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
+              <div className='relative'>
+                <input
+                  className='border border-black p-2 rounded-lg'
+                  type='text'
+                  placeholder='Search'
+                  id='search'
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              {searchQuery && (
+                <button onClick={() => setSearchQuery('')||fetchAllStudents()} 
+                className="absolute right-2 translate-y-1/2 text-gray-500 hover:text-black">
+                  ❌
+                  </button>
+                )}</div>
               <button className='bg-primary text-white p-2 px-5 border border-black rounded-lg' onClick={handleSearch}>
                 Search
               </button>
@@ -114,10 +110,10 @@ export default function Account() {
                       </td>
                       <td className='border border-black p-2 text-center'>{student.student_address}</td>
                       <td className='border border-black p-2 text-center'>
-                        <Link className='text-primary m-2' to={`/studentDetails/${student.student_id}`}>
+                        <Link className='text-primary m-2' to={`/studentDetails/${student.id}`}>
                           Edit
                         </Link>
-                        <button className='text-red-500 m-2' onClick={() => handleDelete(student.student_id)}>
+                        <button className='text-red-500 m-2' onClick={() => handleDelete(student.id,student.student_id)}>
                           Delete
                         </button>
                       </td>
@@ -134,7 +130,7 @@ export default function Account() {
               </tbody>
             </table>
             <div className='flex justify-center py-5'>
-              {Array.from({ length: totalPages }, (_, index) => (
+            {!(fetchedStudents.length<10 && fetchedStudents.total<10) ? Array.from({ length: totalPages }, (_, index) => (
                 <button
                   key={index + 1}
                   onClick={() => setCurrentPage(index + 1)}
@@ -142,7 +138,7 @@ export default function Account() {
                 >
                   {index + 1}
                 </button>
-              ))}
+              )) : <></>}
             </div>
           </div>
         </div>

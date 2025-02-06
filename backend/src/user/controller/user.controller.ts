@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post,Req} from '@nestjs/common';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { UserService } from './services/user.service';
+import { CreateUserDto } from '../dtos/create-user.dto';
+import { UserService } from '../services/user.service';
 
 /**
  * The UserController is a class that handles the incoming HTTP requests for the User entity.

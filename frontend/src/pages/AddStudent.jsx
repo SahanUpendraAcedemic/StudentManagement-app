@@ -1,22 +1,14 @@
 import React, { useState,useEffect } from 'react'
 import { ToastContainer,toast } from 'react-toastify';
 import CollapsibleDiv from '../components/Collapseblediv'
+import { reqCreateStudent } from '../services/student.services';
 
 export default function () {
 
     const [studentDetails,setStudentDetails] = useState({});
 
     const setStudent = async(studentDetails)=>{
-        const response = await fetch('http://localhost:3000/student/createStudent',
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(studentDetails)
-            }
-        )
-        const data = await response.json();
+        const data = await reqCreateStudent(studentDetails);
         console.log(data);
         toast.info(data);
     }
