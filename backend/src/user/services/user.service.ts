@@ -11,19 +11,15 @@ export class UserService {
         private createUserRepo:Repository<User>,
     ) {}
 
-    public async getUser(){
-        
+    public async getUser(email:string): Promise<User | null> {
+        return await this.createUserRepo.findOneBy({ email: email });
     }
 
     public async createUser(createUserDto:CreateUserDto){
-        const updated_at = new Date();
-        const role = "User"
-        const newUser = this.createUserRepo.create(createUserDto);
-        newUser.updated_at = updated_at;
-        newUser.role = role;
-        const enterdUser = this.createUserRepo.save(newUser);
-        return enterdUser;
-    }
-
+        return this.createUserRepo.save({
+            ...createUserDto,
+            created_at: new Date(),
+            });
+        }
 }
 

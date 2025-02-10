@@ -25,9 +25,8 @@ export class StudentService {
     }
 
     public async getAllStudents({page: page = 1, limit: limit = 10, search: search}){ {
-        console.log(page,limit,search);
-
         const offset = (page-1)*limit;
+
         const searchQuery = search ?    
              [
                 {student_firstName: ILike(`%${search}%`)},

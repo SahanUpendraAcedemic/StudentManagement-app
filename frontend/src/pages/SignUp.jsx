@@ -19,16 +19,9 @@ export default function SignUp() {
       name: formData.get('firstName')+'_'+formData.get('lastName'),
       email: formData.get('email'),
       password: formData.get('password'),
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
     });
-
-    const response = await fetch('http://localhost:3000/user/signup',{
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(newUserData)
-    })
 
     setLoading(false);
 };

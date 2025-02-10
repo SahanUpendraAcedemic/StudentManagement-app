@@ -6,11 +6,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/entities/user.entity';
 import { Student } from './student/entities/student.entity';
 
+import { AuthModule } from './auth/module/auth.module';
 import { UserModule } from './user/modules/user.module';
 import { StudentModule } from './student/modules/student.module';
 
 import { UserController } from './user/controller/user.controller';
 import { StudentController } from './student/controllers/student.controller';
+
 
 
 @Module({
@@ -28,7 +30,8 @@ import { StudentController } from './student/controllers/student.controller';
         synchronize: true,
       }), 
     }),
-    StudentModule,],
+    StudentModule,
+    AuthModule,],
   controllers: [AppController, UserController, StudentController],
   providers: [AppService],
 })

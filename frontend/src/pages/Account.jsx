@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import {reqFetchAllStudents,reqDeleteStudent} from '../services/student.services';
+import studentService from '../services/studentService';
 
 export default function Account() {
   const [fetchedStudents, setFetchedStudents] = useState([]);
@@ -12,17 +12,17 @@ export default function Account() {
   // Fetch students through useCallback to prevent unnessarty data fetches
   const fetchAllStudents = useCallback(async () => {
     try {
-      const data = await reqFetchAllStudents(currentPage, recordsPerPage);
-      console.log(data);
+      const response = await studentService.reqFetchAllStudents(currentPage, recordsPerPage);
+      console.log(response.data);
       
-      if (data) {
-        setFetchedStudents(data.studentsDetails);
-        setTotalPages(Math.ceil(data.total / recordsPerPage));
+      if (response) {
+        setFetchedStudents(response.data.studentsDetails);
+        setTotalPages(Math.ceil(response.data.total / recordsPerPage));
         console.table(fetchedStudents);
       } else {
         setFetchedStudents([]);
         setTotalPages(1);
-        console.log("else"+fetchedStudents);
+        console.log("else "+fetchedStudents);
       }
     } catch (error) {
       console.error('Error fetching students:', error);
@@ -34,7 +34,7 @@ export default function Account() {
   const handleDelete = async (id,student_id) => {
     try {
       console.log(id,student_id);
-      const response = await reqDeleteStudent(id,student_id);
+      const response = await studentService.reqDeleteStudent(id,student_id);
       console.log(response);
       
       fetchAllStudents(); // Refresh student list
@@ -46,9 +46,9 @@ export default function Account() {
   // Search for a student by name
   const handleSearch = async () => {
 
-    const data = await reqFetchAllStudents(currentPage, recordsPerPage, searchQuery);
-    setFetchedStudents(data.studentsDetails);
-    setTotalPages(Math.ceil(data.total / recordsPerPage));    
+    const response = await studentService.reqFetchAllStudents(currentPage, recordsPerPage, searchQuery);
+    setFetchedStudents(response.data.studentsDetails);
+    setTotalPages(Math.ceil(response.data.total / recordsPerPage));    
   };
 
   useEffect(() => {
@@ -56,7 +56,10 @@ export default function Account() {
   }, [fetchAllStudents]);
 
   return (
-    <div>
+    <>
+    {
+      fetchedStudents ? (
+        <div>
       <div className='flex flex-col'>
         <div className='flex justify-end p-10'>
           <Link className='rounded-lg bg-primary text-white p-2 px-5 border border-black hover:bg-white hover:border-black hover:text-black' to={'/addStudent'}>
@@ -143,6 +146,8 @@ export default function Account() {
           </div>
         </div>
       </div>
-    </div>
+    </div>):
+    (<div>Loading...</div>)
+  }</>
   );
 }

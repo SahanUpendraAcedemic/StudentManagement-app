@@ -1,14 +1,14 @@
 import React, { useState,useEffect } from 'react'
 import { ToastContainer,toast } from 'react-toastify';
-import CollapsibleDiv from '../components/Collapseblediv'
-import { reqCreateStudent } from '../services/student.services';
+import CollapsibleDiv from '../components/Collapseblediv';
+import studentService from '../services/studentService';
 
 export default function () {
 
     const [studentDetails,setStudentDetails] = useState({});
 
     const setStudent = async(studentDetails)=>{
-        const data = await reqCreateStudent(studentDetails);
+        const data = await studentService.reqCreateStudent(studentDetails);
         console.log(data);
         toast.info(data);
     }

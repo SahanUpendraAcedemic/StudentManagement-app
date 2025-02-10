@@ -2,7 +2,7 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
-import {reqFetchStudentById,reqUpdateStudents} from '../services/student.services';
+import studentService from '../services/studentService';
 
 export default function StudentDetails() {
     const [studentDetails, setStudentDetails] = useState(null);
@@ -11,20 +11,22 @@ export default function StudentDetails() {
     const [isUpdated, setIsUpdated] = useState(false);
     const {id}  = useParams();
 
+    //fetch the student details by id from redirect
     const fetchStudentDetails = async (id) => {
         setLoading(true);
         try {
-            const data = await reqFetchStudentById(id);
-            console.log(data);
+            const response = await studentService.reqFetchStudentById(id);
+            console.table(response.data);
 
-            setStudentDetails(data);
-            setUpdateStudentDetails({...data}); // Set editable state
+            setStudentDetails(response.data);
+            setUpdateStudentDetails({...response.data}); // Set editable state
         } catch (error) {
             toast.error("Error fetching student details");
         }
         setLoading(false);
     };
 
+    //assign the values to the updateStudentDetails object upon Onchange event
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setUpdateStudentDetails(prevState => ({
@@ -34,12 +36,14 @@ export default function StudentDetails() {
         setIsUpdated(true);
     }
 
+    //commit updateStudentDetails to the database
     const handleUpdate = async () => {
         try {
-            const response = await reqUpdateStudents(updateStudentDetails);
+            const response = await studentService.reqUpdateStudents(updateStudentDetails);
             console.log(response);
             setIsUpdated(true);
             toast.success("Student updated successfully!");
+            window.location.replace('/account');
             
         }
         catch (error) {
