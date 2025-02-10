@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function CollapsibleDiv({content }) {
+function CollapsibleDiv({ content }) {
   const [isOpen, setIsOpen] = useState(true);
 
   const toggleCollapse = () => {
@@ -12,12 +12,12 @@ function CollapsibleDiv({content }) {
       <button
         onClick={toggleCollapse}
         className="bg-primary rounded-xl text-white"
-        type="button"   
+        type="button"
       >
         {isOpen ? "^" : "V"}
       </button>
-        {isOpen && content}
-      </div>
+      {isOpen && content}
+    </div>
   );
 }
 

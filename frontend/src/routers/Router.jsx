@@ -8,37 +8,36 @@ import AddStudent from "../pages/AddStudent";
 import StudentDetails from "../pages/StudentDetails";
 
 const router = createBrowserRouter([
-    {
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      {
         path: "/",
-        element: <App />,
-        children: [
-            {
-                path: "/",
-                element:<Mainpage />
-            },
-            {
-                path: "/signin",
-                element:<SignIn />
-            },
-            {
-                path:"/signup",
-                element:<SignUp />
-            },
-            {
-                path:"/account",
-                element:<Account/>
-            },
-            {
-                path:"/addStudent",
-                element:<AddStudent/>
-            },
-            {
-                path:"/studentDetails/:id",
-                element:<StudentDetails/>
-            }
-        ]
-
-    }
+        element: <Mainpage />,
+      },
+      {
+        path: "/signin",
+        element: <SignIn />,
+      },
+      {
+        path: "/signup",
+        element: <SignUp />,
+      },
+      {
+        path: "/account",
+        element: <Account />,
+      },
+      {
+        path: "/addStudent",
+        element: <AddStudent />,
+      },
+      {
+        path: "/studentDetails/:id",
+        element: <StudentDetails />,
+      },
+    ],
+  },
 ]);
 
 export default router;
