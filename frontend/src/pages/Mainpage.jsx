@@ -2,9 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 export default function Mainpage() {
-  const user = sessionStorage.getItem("user");
-  console.table(sessionStorage);
+  const user = sessionStorage.getItem("user"); //if sessionStorage is set then it will return the user data
 
+  //conditional rendering of the buttons based on the session storage user data
   return (
     <div className="bg-[url('bg-1.jpg')] bg-cover bg-center w-screen h-screen">
       <div className="h-screen flex items-center justify-center flex-col">

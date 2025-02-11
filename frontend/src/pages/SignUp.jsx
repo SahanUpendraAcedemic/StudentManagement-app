@@ -13,14 +13,19 @@ export default function SignUp() {
     created_at: "",
   });
 
+  //validate the signup form
   const validateSignUp = (e) => {
     e.preventDefault();
     if (e.target.password.value !== e.target.rePassword.value) {
       toast.error("Passwords do not match");
       return false;
+    } else if (e.target.password.value.length < 6) {
+      toast.error("Password must be at least 6 characters long");
+      return false;
     }
   };
 
+  //condense the data to newUserData
   const handleSignUp = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -32,12 +37,13 @@ export default function SignUp() {
       password: formData.get("password"),
       role: "user",
       created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(), //added updated_at as same as created_at for now
     });
 
+    //validating and assing data to the api
     if (!validateSignUp(e)) {
       try {
-        const data = await userService.reqSignUp(newUserData);
+        const data = await userService.reqSignup(newUserData);
         console.log(data);
         if (data.status === 201) {
           toast.success("User Created Successfully");
@@ -65,7 +71,7 @@ export default function SignUp() {
         <form
           className="flex flex-col p-5 space-y-4 w-full items-center justify-center"
           method="POST"
-          onSubmit={handleSignUp()}
+          onSubmit={handleSignUp}
         >
           <ToastContainer />
           <h1 className="text-3xl font-bold">Sign Up</h1>

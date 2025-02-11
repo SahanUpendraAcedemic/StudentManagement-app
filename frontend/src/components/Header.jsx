@@ -1,14 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import PopupWindow from "./PopupWindow";
 
 export default function Header() {
   const navigate = useNavigate();
   const user = sessionStorage.getItem("user");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const handellogout = () => {
-    sessionStorage.removeItem("user");
-    sessionStorage.removeItem("token");
-    navigate("/");
+    const confirmLogout = window.confirm("Are you sure you want to log out?");
+    if (confirmLogout) {
+      sessionStorage.removeItem("user");
+      sessionStorage.removeItem("token");
+      navigate("/");
+    }
   };
 
   return (
@@ -42,13 +47,24 @@ export default function Header() {
             </Link>
             <button
               className="rounded-lg bg-white text-black p-2 px-5 border border-black hover:bg-primary hover:border hover:border-white hover:text-white"
-              onClick={() => handellogout()}
+              onClick={() => setIsModalOpen(true)}
             >
               Log Out
             </button>
           </ul>
         )}
       </nav>
+      {/* Reusable Modal Component */}
+      <PopupWindow
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handellogout}
+        title="Confirm Logout"
+        message="Are you sure you want to log out?"
+        confirmText="Logout"
+        cancelText="Cancel"
+        confirmColor="bg-red-600 hover:bg-red-700"
+      />
     </div>
   );
 }
