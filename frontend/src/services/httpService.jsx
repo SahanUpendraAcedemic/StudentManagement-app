@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 
 class httpService {
   service = null;
@@ -27,8 +28,12 @@ class httpService {
   };
 
   handleError = (error) => {
-    if (!error.response) {
-      return Promise.reject({ message: error.message });
+    if (error.response.status === 401) {
+      toast.error("Please login to continue", {
+        onclose: () => {
+          window.location.href = "/login";
+        },
+      });
     }
   };
 }
