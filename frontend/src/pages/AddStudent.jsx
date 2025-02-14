@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import CollapsibleDiv from "../components/Collapseblediv";
 import studentService from "../services/studentService";
 import { useNavigate } from "react-router-dom";
@@ -13,9 +13,7 @@ export default function () {
     setIsModalOpen(true);
     const data = await studentService.reqCreateStudent(studentDetails);
     if (data.status === 201) {
-      toast.success("Student Added Successfully", {
-        onClose: () => navigate("/Account"),
-      });
+      toast.success("Student Added Successfully");
     } else {
       toast.error("Invalid Credentials");
     }
@@ -78,7 +76,6 @@ export default function () {
   return (
     <div>
       <div className="m-5">
-        <ToastContainer />
         <form
           className="flex flex-col p-5 space-y-4 w-full items-start justify-center"
           method="POST"

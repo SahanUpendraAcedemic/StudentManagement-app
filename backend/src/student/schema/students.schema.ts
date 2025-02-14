@@ -15,7 +15,7 @@ export class Student {
   student_lastName: string;
 
   @Prop()
-  student_credentialName: string;
+  student_credetialName: string;
 
   @Prop()
   student_address: string;
@@ -27,7 +27,7 @@ export class Student {
   student_dob: Date;
 
   @Prop()
-  student_enrolldate: Date;
+  enrolldate: Date;
 
   @Prop()
   formerEducation: string;

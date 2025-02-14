@@ -8,13 +8,12 @@ export default function Header() {
   const user = sessionStorage.getItem("user");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handellogout = () => {
-    const confirmLogout = window.confirm("Are you sure you want to log out?");
-    if (confirmLogout) {
-      sessionStorage.removeItem("user");
-      localStorage.removeItem("user");
-      sessionStorage.removeItem("token");
-      navigate("/");
-    }
+    sessionStorage.removeItem("user");
+    localStorage.removeItem("user");
+    sessionStorage.removeItem("token");
+    localStorage.removeItem("token");
+    setIsModalOpen(false);
+    navigate("/");
   };
 
   return (

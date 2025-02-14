@@ -7,21 +7,34 @@ export default function SignUp() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [newUserData, setNewUserData] = useState({
-    firstName: "",
+    name: "",
     email: "",
     password: "",
+    role: "",
     created_at: "",
+    updated_at: "",
   });
 
   //validate the signup form
   const validateSignUp = (e) => {
     e.preventDefault();
-    if (e.target.password.value !== e.target.rePassword.value) {
+    if (
+      e.target.firstName.value === "" ||
+      e.target.lastName.value === "" ||
+      e.target.email.value === "" ||
+      e.target.password.value === "" ||
+      e.target.rePassword.value === ""
+    ) {
+      toast.error("Please fill all the fields");
+      return false;
+    } else if (e.target.password.value !== e.target.rePassword.value) {
       toast.error("Passwords do not match");
       return false;
     } else if (e.target.password.value.length < 6) {
       toast.error("Password must be at least 6 characters long");
       return false;
+    } else {
+      return true;
     }
   };
 
@@ -30,19 +43,21 @@ export default function SignUp() {
     e.preventDefault();
     setLoading(true);
     const formData = new FormData(e.target);
+    console.table(formData);
 
-    setNewUserData({
+    const newUserData = {
       name: formData.get("firstName") + "_" + formData.get("lastName"),
       email: formData.get("email"),
       password: formData.get("password"),
       role: "user",
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(), //added updated_at as same as created_at for now
-    });
+    };
 
     //validating and assing data to the api
-    if (!validateSignUp(e)) {
+    if (validateSignUp(e)) {
       try {
+        console.log(newUserData);
         const data = await userService.reqSignup(newUserData);
         console.log(data);
         if (data.status === 201) {
@@ -53,7 +68,7 @@ export default function SignUp() {
         }
       } catch (error) {
         console.log(error);
-        toast.error("Invalid Credentials");
+        toast.error(error.response.data.message);
       }
 
       setLoading(false);
@@ -73,7 +88,6 @@ export default function SignUp() {
           method="POST"
           onSubmit={handleSignUp}
         >
-          <ToastContainer />
           <h1 className="text-3xl font-bold">Sign Up</h1>
           <input
             className="rounded-lg border border-black p-2 focus:drop-shadow focus:scale-105"

@@ -20,10 +20,14 @@ export class UserService {
   }
 
   public async createUser(createUserDto: CreateUserDto) {
+    if (await this.getUser(createUserDto.email)) {
+      throw new Error('User already exists');
+    }
     const newUser = new this.createUserRepo({
       ...createUserDto,
       created_at: new Date(),
     });
+    console.log(newUser);
 
     return await newUser.save();
   }

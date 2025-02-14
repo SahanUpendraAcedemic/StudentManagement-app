@@ -1,38 +1,39 @@
-import React, { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import userService from "../services/UserServices";
 import { useNavigate } from "react-router-dom";
 
 export default function SignIn() {
-  const [credentials, setCredentials] = useState([]);
   const navigate = useNavigate();
 
   const handleSignIn = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    setCredentials({
+    const credentials = {
       email: formData.get("user_email"),
       password: formData.get("user_password"),
-    });
+    };
 
-    if (formData) {
+    if (credentials.email !== "" || credentials.password !== "") {
       const data = await userService.reqLogin(credentials);
       console.log(data);
       if (data.status === 200) {
         console.log(data.data.access_token);
         sessionStorage.setItem("token", data.data.access_token);
         sessionStorage.setItem("user", JSON.stringify(data.data.user));
-        navigate("/Account");
+        toast.success("User Logged In Successfully");
+        navigate("/account");
       } else {
         toast.error("Invalid Credentials");
       }
+    } else {
+      toast.error("Please fill all the fields");
     }
   };
 
   return (
     <div>
       <div className="flex flex-row h-screen">
-        <ToastContainer />
         <img
           src="/log-1.jpg"
           alt="bg"

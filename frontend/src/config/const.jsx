@@ -12,5 +12,5 @@ export const URL = {
   CREATE_STUDENT: `${baseUrl}/student/createStudent`,
   UPDATE_STUDENT: `${baseUrl}/student/updateStudent`,
   DELETE_STUDENT: (id, student_id) =>
-    `${baseUrl}/student/deleteStudent/${id}/${student_id}`,
+    `${baseUrl}/student/deleteStudent?id=${id}&student_id=${student_id}`,
 };

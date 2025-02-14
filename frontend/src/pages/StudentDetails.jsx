@@ -1,7 +1,8 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import studentService from "../services/studentService";
 import PopupWindow from "../components/PopupWindow";
 
@@ -11,6 +12,7 @@ export default function StudentDetails() {
   const [loading, setLoading] = useState(false);
   const [isUpdated, setIsUpdated] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
   const { id } = useParams();
 
   //fetch the student details by id from redirect
@@ -46,7 +48,8 @@ export default function StudentDetails() {
       console.log(response);
       setIsUpdated(true);
       toast.success("Student updated successfully!");
-      
+      setIsModalOpen(false);
+      navigate("/Account");
     } catch (error) {
       console.log(error);
       toast.error("Update failed. Please try again.");
@@ -60,7 +63,6 @@ export default function StudentDetails() {
   return (
     <div className="m-5 p-5">
       <h1 className="text-3xl font-bold mb-2">Update Student Details</h1>
-      <ToastContainer />
       <div className="flex flex-row space-x-4 rounded-lg border border-black p-5 drop-shadow">
         {studentDetails ? (
           <table className="w-full m-2 p-5">
